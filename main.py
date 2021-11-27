@@ -107,41 +107,41 @@ class AVLTree:
 
         self.rebalance(node)
 
-    def left_rotate(self, x):
-        y = x.right
-        y.parent = x.parent
-        if y.parent is None:
-            self.root = y
+    def left_rotate(self, node):
+        right = node.right
+        right.parent = node.parent
+        if right.parent is None:
+            self.root = right
         else:
-            if y.parent.left is x:
-                y.parent.left = y
-            elif y.parent.right is x:
-                y.parent.right = y
-        x.right = y.left
-        if x.right is not None:
-            x.right.parent = x
-        y.left = x
-        x.parent = y
-        update_height(x)
-        update_height(y)
+            if right.parent.left is node:
+                right.parent.left = right
+            elif right.parent.right is node:
+                right.parent.right = right
+        node.right = right.left
+        if node.right is not None:
+            node.right.parent = node
+        right.left = node
+        node.parent = right
+        update_height(node)
+        update_height(right)
 
-    def right_rotate(self, x):
-        y = x.left
-        y.parent = x.parent
-        if y.parent is None:
-            self.root = y
+    def right_rotate(self, node):
+        left = node.left
+        left.parent = node.parent
+        if left.parent is None:
+            self.root = left
         else:
-            if y.parent.left is x:
-                y.parent.left = y
-            elif y.parent.right is x:
-                y.parent.right = y
-        x.left = y.right
-        if x.left is not None:
-            x.left.parent = x
-        y.right = x
-        x.parent = y
-        update_height(x)
-        update_height(y)
+            if left.parent.left is node:
+                left.parent.left = left
+            elif left.parent.right is node:
+                left.parent.right = left
+        node.left = left.right
+        if node.left is not None:
+            node.left.parent = node
+        left.right = node
+        node.parent = left
+        update_height(node)
+        update_height(left)
 
     def update(self, node: Node):
         parent = self.root
@@ -166,11 +166,9 @@ class AVLTree:
 
     def get(self, key: int):
         parent = self.root
-
         num_of_loops = 0
 
         while True:
-
             if parent is None:
                 print(f"Num of loops to find a node: {num_of_loops}")
                 return None
