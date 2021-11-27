@@ -7,7 +7,7 @@ import random
 class Node:
     key: int
     value: str
-    height: int = 1
+    height: int = -1
     left: Any = None
     right: Any = None
     parent: Any = None
