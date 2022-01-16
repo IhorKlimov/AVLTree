@@ -13,6 +13,7 @@ class Node:
     parent: Any = None
 
     def delete(self):
+        print(f"Deleting {self}")
         if self.left is None or self.right is None:
             if self is self.parent.left:
                 self.parent.left = self.left or self.right
@@ -25,6 +26,7 @@ class Node:
             return self
         else:
             s = self.next_larger()
+            print(f"next larger {s}")
             self.key, s.key = s.key, self.key
             return s.delete()
 
@@ -61,16 +63,24 @@ class AVLTree:
     def rebalance(self, node):
         while node is not None:
             update_height(node)
+            print(f"Checking node {node.key}. Left: {height(node.left)}, right: {height(node.right)}")
+
             if height(node.left) >= 2 + height(node.right):
+                print(f"Node {node.key} is left-heavy")
                 if height(node.left.left) >= height(node.left.right):
+                    print("Doing right rotation")
                     self.right_rotate(node)
                 else:
+                    print("Doing right left rotation and right rotation")
                     self.left_rotate(node.left)
                     self.right_rotate(node)
             elif height(node.right) >= 2 + height(node.left):
+                print(f"Node {node.key} is right-heavy")
                 if height(node.right.right) >= height(node.right.left):
+                    print("Doing left rotation")
                     self.left_rotate(node)
                 else:
+                    print("Doing right right rotation and left rotation")
                     self.right_rotate(node.right)
                     self.left_rotate(node)
             node = node.parent
@@ -82,6 +92,7 @@ class AVLTree:
         while True:
             if parent is None:
                 # first node
+                print("First node in a tree. Setting as a root")
                 self.root = node
                 break
             elif node.key < parent.key:
@@ -89,6 +100,7 @@ class AVLTree:
                     # insert left
                     parent.left = node
                     node.parent = parent
+                    print(f"Inserting as a left child of {parent}")
                     break
                 else:
                     parent = parent.left
@@ -97,11 +109,13 @@ class AVLTree:
                     # insert right
                     parent.right = node
                     node.parent = parent
+                    print(f"Inserting as a right child of {parent}")
                     break
                 else:
                     parent = parent.right
             else:
                 # same key, just assign a new value
+                print(f"Node with this key already existed. Replacing node {parent}")
                 parent.value = node.value
                 break
 
@@ -165,28 +179,35 @@ class AVLTree:
                 return
 
     def get(self, key: int):
+        print(f"Finding a node with key: {key}")
         parent = self.root
         num_of_loops = 0
 
         while True:
             if parent is None:
                 print(f"Num of loops to find a node: {num_of_loops}")
+                print("Node doesn't exist")
                 return None
             elif key < parent.key:
                 if parent.left is None:
                     print(f"Num of loops to find a node: {num_of_loops}")
+                    print("Node doesn't exist")
                     return None
                 else:
+                    print("Going left in the tree")
                     parent = parent.left
             elif key > parent.key:
                 if parent.right is None:
                     print(f"Num of loops to find a node: {num_of_loops}")
+                    print("Node doesn't exist")
                     return None
                 else:
+                    print("Going right in the tree")
                     parent = parent.right
             else:
                 # found it
                 print(f"Num of loops to find a node: {num_of_loops}")
+                print("Found a node")
                 return parent
 
             num_of_loops += 1
@@ -214,13 +235,22 @@ class AVLTree:
 def main():
     tree = AVLTree()
 
-    for n in range(10000):
-        node = Node(random.randint(0, 100_000), f"Test value {n}")
-        tree.insert(node)
+    # for n in range(10000):
+    #     node = Node(random.randint(0, 100_000), f"Test value {n}")
+    #     tree.insert(node)
+    #
+    # for n in range(15):
+    #     number = random.randint(0, 100_000)
+    #     print(f"Contains node {number}: {tree.get(number) is not None}")
 
-    for n in range(15):
-        number = random.randint(0, 100_000)
-        print(f"Contains node {number}: {tree.get(number) is not None}")
+    tree.insert(Node(5, "New York"))
+    tree.insert(Node(4, "Boston"))
+    tree.insert(Node(8, "Los Angeles"))
+    tree.insert(Node(7, "Houston"))
+    tree.insert(Node(9, "Fort Lauderdale"))
+
+    tree.get(9)
+
 
 
 if __name__ == '__main__':
